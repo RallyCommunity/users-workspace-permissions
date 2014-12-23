@@ -17,6 +17,10 @@ Ext.define('CustomApp', {
         });
     },
     _onDataLoaded:function(store,results) {
+        _.remove(results, function(result){
+            return result.get('User').SubscriptionAdmin === true;
+        });
+
         var permissions = _.reduce(results, function(finalResult, permissionRecord){
             finalResult[permissionRecord.get('User').UserName] = (finalResult[permissionRecord.get('User').UserName] || []).concat(permissionRecord.get('Workspace')._refObjectName);
             return finalResult;
@@ -39,10 +43,10 @@ Ext.define('CustomApp', {
             }),
             columnCfgs: [
                 {
-                    text: 'User',dataIndex: 'user',minWidth:200
+                    text: 'User',dataIndex: 'user',minWidth:300
                 },
                 {
-                    text: 'Workspaces',dataIndex: 'workspaces',minWidth:200, renderer: function(workspaces){
+                    text: 'Workspaces',dataIndex: 'workspaces',minWidth:300, renderer: function(workspaces){
                         var text = [];
                         _.each(workspaces, function(workspace){
                              text.push(workspace);

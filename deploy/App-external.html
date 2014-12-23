@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Permissions</title>
+
+    <script type="text/javascript" src="https://rally1.rallydev.com/apps/2.0rc3/sdk.js"></script>
+
+    <script type="text/javascript">
+        Rally.onReady(function () {
+                Ext.define("CustomApp",{extend:"Rally.app.App",componentCls:"app",launch:function(){Ext.create("Rally.data.wsapi.Store",{model:"WorkspacePermission",limit:1/0,fetch:["User","Role","Name","Workspace","UserName","SubscriptionAdmin"],autoLoad:!0,listeners:{load:function(store,data,success){this._onDataLoaded(store,data)},scope:this}})},_onDataLoaded:function(store,results){var permissions=_.reduce(results,function(finalResult,permissionRecord){return finalResult[permissionRecord.get("User").UserName]=(finalResult[permissionRecord.get("User").UserName]||[]).concat(permissionRecord.get("Workspace")._refObjectName),finalResult},{});this._show(permissions)},_show:function(permissions){var arrayOfPermissions=[];_.each(permissions,function(value,key){arrayOfPermissions.push({user:key,workspaces:value})}),this.add({xtype:"rallygrid",showPagingToolbar:!0,showRowActionsColumn:!1,editable:!1,store:Ext.create("Rally.data.custom.Store",{data:arrayOfPermissions}),columnCfgs:[{text:"User",dataIndex:"user",minWidth:200},{text:"Workspaces",dataIndex:"workspaces",minWidth:200,renderer:function(workspaces){var text=[];return _.each(workspaces,function(workspace){text.push(workspace)}),text.join("<br />")}}]})}});
+
+            Rally.launchApp('CustomApp', {
+                name:"User Permissions",
+	            parentRepos:""
+            });
+
+        });
+    </script>
+
+
+    <style type="text/css">
+        
+    </style>
+</head>
+<body>
+</body>
+</html>
